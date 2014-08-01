@@ -237,15 +237,15 @@ module ActionView
               end
             end
           end
-          
+
           def jquery_id(id) #:nodoc:
             id.to_s.count('#.*,>+~:[/ ') == 0 ? "##{id}" : id
           end
-          
+
           def jquery_ids(ids) #:nodoc:
             Array(ids).map{|id| jquery_id(id)}.join(',')
           end
-          
+
           # Returns a element reference by finding it through +id+ in the DOM. This element can then be
           # used for further method calls. Examples:
           #
@@ -263,7 +263,7 @@ module ActionView
               when String, Symbol, NilClass
                 JavaScriptElementProxy.new(self, id)
               else
-                JavaScriptElementProxy.new(self, ActionController::RecordIdentifier.dom_id(id))
+                JavaScriptElementProxy.new(self, ActionView::RecordIdentifier.dom_id(id))
             end
           end
 
@@ -572,7 +572,7 @@ module ActionView
 
             def with_formats(*args)
               return yield unless @context
-              
+
               lookup = @context.lookup_context
               begin
                 old_formats, lookup.formats = lookup.formats, args
@@ -671,7 +671,7 @@ module ActionView
           js_options['data'] = "''" if js_options['type'] == "'post'" && js_options['data'].nil?
           options_for_javascript(js_options.reject {|key, value| value.nil?})
         end
-      
+
         def build_update_for_success(html_id, insertion=nil)
           insertion = build_insertion(insertion)
           "#{JQUERY_VAR}('#{jquery_id(html_id)}').#{insertion}(request);"
@@ -700,7 +700,7 @@ module ActionView
             options[:beforeSend] << (options[key].last == ';' ? options.delete(key) : options.delete(key) << ';') if options[key]
           end
           options.delete(:beforeSend) if options[:beforeSend].blank?
-          options[:complete] = options.delete(:loaded) if options[:loaded] 
+          options[:complete] = options.delete(:loaded) if options[:loaded]
           options[:error] = options.delete(:failure) if options[:failure]
           if options[:update]
             if options[:update].is_a?(Hash)
@@ -797,7 +797,7 @@ module ActionView
       def reload(options_for_replace = {})
         replace(options_for_replace.merge({ :partial => @id.to_s.sub(/^#/,'') }))
       end
-      
+
       def value()
         call 'val()'
       end
